@@ -15,12 +15,13 @@ use Symfony\Component\HttpFoundation\Response;
 class LuckyController extends Controller
 {
     /**
-     * @Route("/lucky/number")
+     * @Route("/lucky/number", name="luck")
      */
     public function numberAction()
     {
         $number=mt_rand(0,100);
         var_dump($number);
+        return true;
 //        return $this->render('lucky/number.html.twig', array(
 //            'number' => $number
 //        ));

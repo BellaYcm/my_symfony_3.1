@@ -1,0 +1,140 @@
+<?php
+
+namespace SunKe\TestBundle\Controller\Blog;
+
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use SunKe\TestBundle\Entity\Blog\Post;
+use SunKe\TestBundle\Form\Blog\PostType;
+
+/**
+ * Blog\Post controller.
+ *
+ * @Route("/blog_post")
+ */
+class PostController extends Controller
+{
+    /**
+     * Lists all Blog\Post entities.
+     *
+     * @Route("/", name="blog_post_index")
+     * @Method("GET")
+     */
+    public function indexAction()
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $blog\Posts = $em->getRepository('SkTestBundle:Blog\Post')->findAll();
+
+        return $this->render('blog/post/index.html.twig', array(
+            'blog\Posts' => $blog\Posts,
+        ));
+    }
+
+    /**
+     * Creates a new Blog\Post entity.
+     *
+     * @Route("/new", name="blog_post_new")
+     * @Method({"GET", "POST"})
+     */
+    public function newAction(Request $request)
+    {
+        $blog\Post = new Post();
+        $form = $this->createForm('SunKe\TestBundle\Form\PostType', $blog\Post);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($blog\Post);
+            $em->flush();
+
+            return $this->redirectToRoute('blog_post_show', array('id' => $blog\Post->getId()));
+        }
+
+        return $this->render('blog/post/new.html.twig', array(
+            'blog\Post' => $blog\Post,
+            'form' => $form->createView(),
+        ));
+    }
+
+    /**
+     * Finds and displays a Blog\Post entity.
+     *
+     * @Route("/{id}", name="blog_post_show")
+     * @Method("GET")
+     */
+    public function showAction(Post $blog\Post)
+    {
+        $deleteForm = $this->createDeleteForm($blog\Post);
+
+        return $this->render('blog/post/show.html.twig', array(
+            'blog\Post' => $blog\Post,
+            'delete_form' => $deleteForm->createView(),
+        ));
+    }
+
+    /**
+     * Displays a form to edit an existing Blog\Post entity.
+     *
+     * @Route("/{id}/edit", name="blog_post_edit")
+     * @Method({"GET", "POST"})
+     */
+    public function editAction(Request $request, Post $blog\Post)
+    {
+        $deleteForm = $this->createDeleteForm($blog\Post);
+        $editForm = $this->createForm('SunKe\TestBundle\Form\PostType', $blog\Post);
+        $editForm->handleRequest($request);
+
+        if ($editForm->isSubmitted() && $editForm->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($blog\Post);
+            $em->flush();
+
+            return $this->redirectToRoute('blog_post_edit', array('id' => $blog\Post->getId()));
+        }
+
+        return $this->render('blog/post/edit.html.twig', array(
+            'blog\Post' => $blog\Post,
+            'edit_form' => $editForm->createView(),
+            'delete_form' => $deleteForm->createView(),
+        ));
+    }
+
+    /**
+     * Deletes a Blog\Post entity.
+     *
+     * @Route("/{id}", name="blog_post_delete")
+     * @Method("DELETE")
+     */
+    public function deleteAction(Request $request, Post $blog\Post)
+    {
+        $form = $this->createDeleteForm($blog\Post);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->remove($blog\Post);
+            $em->flush();
+        }
+
+        return $this->redirectToRoute('blog_post_index');
+    }
+
+    /**
+     * Creates a form to delete a Blog\Post entity.
+     *
+     * @param Post $blog\Post The Blog\Post entity
+     *
+     * @return \Symfony\Component\Form\Form The form
+     */
+    private function createDeleteForm(Post $blog\Post)
+    {
+        return $this->createFormBuilder()
+            ->setAction($this->generateUrl('blog_post_delete', array('id' => $blog\Post->getId())))
+            ->setMethod('DELETE')
+            ->getForm()
+        ;
+    }
+}
