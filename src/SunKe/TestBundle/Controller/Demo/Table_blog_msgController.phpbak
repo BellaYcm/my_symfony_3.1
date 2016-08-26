@@ -1,0 +1,140 @@
+<?php
+
+namespace SunKe\TestBundle\Controller\Demo;
+
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use SunKe\TestBundle\Entity\Demo\Table_blog_msg;
+use SunKe\TestBundle\Form\Demo\Table_blog_msgType;
+
+/**
+ * Demo\Table_blog_msg controller.
+ *
+ * @Route("/demo_table_blog_msg")
+ */
+class Table_blog_msgController extends Controller
+{
+    /**
+     * Lists all Demo\Table_blog_msg entities.
+     *
+     * @Route("/", name="demo_table_blog_msg_index")
+     * @Method("GET")
+     */
+    public function indexAction()
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $demo\Table_blog_msgs = $em->getRepository('SkTestBundle:Demo\Table_blog_msg')->findAll();
+
+        return $this->render('demo/table_blog_msg/index.html.twig', array(
+            'demo\Table_blog_msgs' => $demo\Table_blog_msgs,
+        ));
+    }
+
+    /**
+     * Creates a new Demo\Table_blog_msg entity.
+     *
+     * @Route("/new", name="demo_table_blog_msg_new")
+     * @Method({"GET", "POST"})
+     */
+    public function newAction(Request $request)
+    {
+        $demo\Table_blog_msg = new Table_blog_msg();
+        $form = $this->createForm('SunKe\TestBundle\Form\Table_blog_msgType', $demo\Table_blog_msg);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($demo\Table_blog_msg);
+            $em->flush();
+
+            return $this->redirectToRoute('demo_table_blog_msg_show', array('id' => $demo\Table_blog_msg->getId()));
+        }
+
+        return $this->render('demo/table_blog_msg/new.html.twig', array(
+            'demo\Table_blog_msg' => $demo\Table_blog_msg,
+            'form' => $form->createView(),
+        ));
+    }
+
+    /**
+     * Finds and displays a Demo\Table_blog_msg entity.
+     *
+     * @Route("/{id}", name="demo_table_blog_msg_show")
+     * @Method("GET")
+     */
+    public function showAction(Table_blog_msg $demo\Table_blog_msg)
+    {
+        $deleteForm = $this->createDeleteForm($demo\Table_blog_msg);
+
+        return $this->render('demo/table_blog_msg/show.html.twig', array(
+            'demo\Table_blog_msg' => $demo\Table_blog_msg,
+            'delete_form' => $deleteForm->createView(),
+        ));
+    }
+
+    /**
+     * Displays a form to edit an existing Demo\Table_blog_msg entity.
+     *
+     * @Route("/{id}/edit", name="demo_table_blog_msg_edit")
+     * @Method({"GET", "POST"})
+     */
+    public function editAction(Request $request, Table_blog_msg $demo\Table_blog_msg)
+    {
+        $deleteForm = $this->createDeleteForm($demo\Table_blog_msg);
+        $editForm = $this->createForm('SunKe\TestBundle\Form\Table_blog_msgType', $demo\Table_blog_msg);
+        $editForm->handleRequest($request);
+
+        if ($editForm->isSubmitted() && $editForm->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($demo\Table_blog_msg);
+            $em->flush();
+
+            return $this->redirectToRoute('demo_table_blog_msg_edit', array('id' => $demo\Table_blog_msg->getId()));
+        }
+
+        return $this->render('demo/table_blog_msg/edit.html.twig', array(
+            'demo\Table_blog_msg' => $demo\Table_blog_msg,
+            'edit_form' => $editForm->createView(),
+            'delete_form' => $deleteForm->createView(),
+        ));
+    }
+
+    /**
+     * Deletes a Demo\Table_blog_msg entity.
+     *
+     * @Route("/{id}", name="demo_table_blog_msg_delete")
+     * @Method("DELETE")
+     */
+    public function deleteAction(Request $request, Table_blog_msg $demo\Table_blog_msg)
+    {
+        $form = $this->createDeleteForm($demo\Table_blog_msg);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $em = $this->getDoctrine()->getManager();
+            $em->remove($demo\Table_blog_msg);
+            $em->flush();
+        }
+
+        return $this->redirectToRoute('demo_table_blog_msg_index');
+    }
+
+    /**
+     * Creates a form to delete a Demo\Table_blog_msg entity.
+     *
+     * @param Table_blog_msg $demo\Table_blog_msg The Demo\Table_blog_msg entity
+     *
+     * @return \Symfony\Component\Form\Form The form
+     */
+    private function createDeleteForm(Table_blog_msg $demo\Table_blog_msg)
+    {
+        return $this->createFormBuilder()
+            ->setAction($this->generateUrl('demo_table_blog_msg_delete', array('id' => $demo\Table_blog_msg->getId())))
+            ->setMethod('DELETE')
+            ->getForm()
+        ;
+    }
+}

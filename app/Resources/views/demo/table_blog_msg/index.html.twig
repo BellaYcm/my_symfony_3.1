@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Demo\Table_blog_msg list</h1>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for demo\Table_blog_msg in demo\Table_blog_msgs %}
+            <tr>
+                <td><a href="{{ path('demo_table_blog_msg_show', { 'id': demo\Table_blog_msg.id }) }}">{{ demo\Table_blog_msg.id }}</a></td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('demo_table_blog_msg_show', { 'id': demo\Table_blog_msg.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('demo_table_blog_msg_edit', { 'id': demo\Table_blog_msg.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('demo_table_blog_msg_new') }}">Create a new entry</a>
+        </li>
+    </ul>
+{% endblock %}
