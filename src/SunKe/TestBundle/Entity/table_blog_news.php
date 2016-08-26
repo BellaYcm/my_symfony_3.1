@@ -21,6 +21,37 @@ class table_blog_news
      */
     private $id;
 
+    /**
+     * @param int $id
+     */
+    public function setId($id)
+    {
+        $this->id = $id;
+    }
+
+    /**
+     * @ORM\Column(type="string", length=100)
+     */
+    private $title;
+
+    /**
+     * @param mixed $title
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
+    }
+
+    /**
+     * Get id
+     *
+     * @return int
+     */
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
 
     /**
      * Get id

@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>table_blog_news</h1>
+
+    <table>
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ table_blog_news.id }}</td>
+            </tr>
+            <tr>
+                <th>title</th>
+                <td>{{ table_blog_news.title }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <ul>
+        <li>
+            <a href="{{ path('table_blog_news_index') }}">Back to the list</a>
+        </li>
+        <li>
+            <a href="{{ path('table_blog_news_edit', { 'id': table_blog_news.id }) }}">Edit</a>
+        </li>
+        <li>
+            {{ form_start(delete_form) }}
+                <input type="submit" value="Delete">
+            {{ form_end(delete_form) }}
+        </li>
+    </ul>
+{% endblock %}
